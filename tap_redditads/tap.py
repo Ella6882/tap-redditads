@@ -61,6 +61,15 @@ class TapRedditAds(Tap):
             default="2023-01-01",
             description="The earliest record date to sync.",
         ),
+        th.Property(
+            "breakdown_columns",
+            th.ArrayType(th.StringType),
+            default=["campaign_id", "date"],
+            description=(
+                "Reddit Ads report API breakdown field names. "
+                "Must align with columns in the reports stream schema."
+            ),
+        ),
     ).to_dict()
 
 

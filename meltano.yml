@@ -52,6 +52,13 @@ plugins:
       label: Start Date
       description: Initial date to start extracting data from
 
+    - name: breakdown_columns
+      kind: array
+      label: Report breakdown columns
+      description: >
+        Reddit Ads report API breakdown dimensions (e.g. campaign_id, date).
+        Must match the reports stream schema primary keys / dimensions.
+
     settings_group_validation:
     - [account_id, client_id, client_secret, refresh_token, user_agent]
 
