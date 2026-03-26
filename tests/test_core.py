@@ -8,6 +8,7 @@ SAMPLE_CONFIG = {
     "refresh_token": "valid_refresh_token",
     "account_id": "your_account_id",
     "user_agent": "cloud:tap-reddit-ads:0.1.0 (by /u/ellar_81)",
+    "breakdown_columns": ["campaign_id", "date"],
 }
 
 def test_reports_post_process():

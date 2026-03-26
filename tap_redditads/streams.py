@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import json
 import sys
-import typing as t
 from datetime import datetime, timedelta
-import dateutil.parser
 from importlib import resources
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
-from singer_sdk import typing as th  # JSON Schema typing helpers
+import dateutil.parser
+import requests
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
 from tap_redditads.client import RedditAdsStream
 
 if sys.version_info >= (3, 9):
@@ -29,7 +34,7 @@ def normalize_timestamp(ts_str):
     # Format as ISO 8601 with UTC time
     return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-def extract_fields_and_metrics(breakdown_columns:list[str], config_file: Path) -> list[str]:
+def extract_fields_and_metrics(breakdown_columns: list[str], config_file: Path) -> list[str]:
     """Extract metrics from post request json."""
 
     with config_file.open() as f:
@@ -58,8 +63,8 @@ class ReportCampaignDateStream(RedditAdsStream):
 
     def prepare_request_payload(
         self,
-        context: Context | None,  # noqa: ARG002
-        next_page_token: Any | None,  # noqa: ARG002, ANN401
+        context: dict | None,  # noqa: ARG002
+        next_page_token: Any | None,  # noqa: ARG002
     ) -> dict | None:
         """Prepare the data payload for the REST API request.
 
@@ -77,7 +82,7 @@ class ReportCampaignDateStream(RedditAdsStream):
         rounded_hour = now.replace(minute=0, second=0, microsecond=0)
         end_date = rounded_hour.strftime('%Y-%m-%dT%H:00:00Z')
 
-        breakdown_columns = ["campaign_id", "date"]
+        breakdown_columns = list(self.config["breakdown_columns"])
 
         fields = extract_fields_and_metrics(breakdown_columns, self.schema_filepath)
         
